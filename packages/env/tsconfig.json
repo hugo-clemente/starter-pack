@@ -1,0 +1,3 @@
+{
+  "extends": "@starter-pack/config/tsconfig.base.json"
+}

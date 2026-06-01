@@ -1,0 +1,40 @@
+{
+  "name": "starter-pack",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @starter-pack/db db:push",
+    "db:studio": "turbo -F @starter-pack/db db:studio",
+    "db:generate": "turbo -F @starter-pack/db db:generate",
+    "db:migrate": "turbo -F @starter-pack/db db:migrate",
+    "db:start": "turbo -F @starter-pack/db db:start",
+    "db:watch": "turbo -F @starter-pack/db db:watch",
+    "db:stop": "turbo -F @starter-pack/db db:stop",
+    "db:down": "turbo -F @starter-pack/db db:down",
+    "check": "oxlint && oxfmt --write"
+  },
+  "dependencies": {
+    "@starter-pack/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@starter-pack/config": "workspace:*",
+    "@types/node": "catalog:",
+    "lefthook": "^2.0.13",
+    "oxfmt": "^0.46.0",
+    "oxlint": "^1.61.0",
+    "turbo": "^2.8.12",
+    "typescript": "catalog:"
+  },
+  "packageManager": "pnpm@9.15.9"
+}
