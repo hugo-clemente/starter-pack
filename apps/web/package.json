@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@polar-sh/better-auth": "catalog:",
+    "@starter-pack/libs": "workspace:*",
     "@starter-pack/api": "workspace:*",
+    "@starter-pack/auth": "workspace:*",
     "@starter-pack/env": "workspace:*",
     "@starter-pack/ui": "workspace:*",
     "@tailwindcss/vite": "^4.2.2",
@@ -28,6 +30,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "sonner": "^2.0.7",
+    "start-cookie": "^1.0.1",
     "tailwindcss": "^4.2.2",
     "zod": "catalog:"
   },

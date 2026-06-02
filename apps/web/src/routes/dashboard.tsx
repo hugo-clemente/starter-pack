@@ -2,16 +2,17 @@ import { Button } from "@starter-pack/ui/components/button";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { getPayment } from "@/functions/get-payment";
-import { getUser } from "@/functions/get-user";
-import { authClient } from "@/lib/auth-client";
 import { useTRPC } from "@/utils/trpc";
+import { customerStateQueryOptions, sessionQueryOptions } from "@/utils/auth";
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
-  beforeLoad: async () => {
-    const session = await getUser();
-    const customerState = await getPayment();
+  beforeLoad: async ({ context: { queryClient, authClient } }) => {
+    const [session, customerState] = await Promise.all([
+      queryClient.ensureQueryData(sessionQueryOptions(authClient)),
+      queryClient.ensureQueryData(customerStateQueryOptions(authClient)),
+    ]);
+
     return { session, customerState };
   },
   loader: async ({ context }) => {
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function RouteComponent() {
-  const { session, customerState } = Route.useRouteContext();
+  const { session, customerState, authClient } = Route.useRouteContext();
 
   const trpc = useTRPC();
   const privateData = useQuery(trpc.privateData.queryOptions());

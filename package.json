@@ -7,6 +7,7 @@
   ],
   "type": "module",
   "scripts": {
+    "init": "node scripts/init-env.mjs",
     "dev": "turbo dev",
     "build": "turbo build",
     "check-types": "turbo check-types",
@@ -16,11 +17,12 @@
     "db:studio": "turbo -F @starter-pack/db db:studio",
     "db:generate": "turbo -F @starter-pack/db db:generate",
     "db:migrate": "turbo -F @starter-pack/db db:migrate",
-    "db:start": "turbo -F @starter-pack/db db:start",
-    "db:watch": "turbo -F @starter-pack/db db:watch",
-    "db:stop": "turbo -F @starter-pack/db db:stop",
-    "db:down": "turbo -F @starter-pack/db db:down",
-    "check": "oxlint && oxfmt --write"
+    "db:start": "docker compose up -d",
+    "db:watch": "docker compose up",
+    "db:stop": "docker compose stop",
+    "db:down": "docker compose down",
+    "check": "oxlint && oxfmt --write",
+    "knip": "knip"
   },
   "dependencies": {
     "@starter-pack/env": "workspace:*",
@@ -30,6 +32,7 @@
   "devDependencies": {
     "@starter-pack/config": "workspace:*",
     "@types/node": "catalog:",
+    "knip": "^6.15.0",
     "lefthook": "^2.0.13",
     "oxfmt": "^0.46.0",
     "oxlint": "^1.61.0",

@@ -1,59 +1,26 @@
-import type { AppRouter } from "@starter-pack/api/routers/index";
-import { env } from "@starter-pack/env/web";
-import { QueryCache, QueryClient } from "@tanstack/react-query";
+import "./index.css";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
-import { toast } from "sonner";
 
 import Loader from "./components/loader";
+import { buildAuthClient } from "./lib/auth-client";
+import { createQueryClient } from "./lib/query-client";
 import { routeTree } from "./routeTree.gen";
 import { TRPCProvider } from "./utils/trpc";
 
-export const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      toast.error(error.message, {
-        action: {
-          label: "retry",
-          onClick: query.invalidate,
-        },
-      });
-    },
-  }),
-  defaultOptions: { queries: { staleTime: 60 * 1000 } },
-});
-
-const trpcClient = createTRPCClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: `${env.VITE_SERVER_URL}/trpc`,
-      fetch(url, options) {
-        return fetch(url, {
-          ...options,
-          credentials: "include",
-        });
-      },
-    }),
-  ],
-});
-
-const trpc = createTRPCOptionsProxy({
-  client: trpcClient,
-  queryClient: queryClient,
-});
-
 export const getRouter = () => {
+  const authClient = buildAuthClient();
+  const { queryClient, trpcClient, trpc } = createQueryClient();
+
   const router = createTanStackRouter({
     routeTree,
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
-    context: { trpc, queryClient },
+    context: { trpc, queryClient, authClient },
     defaultPendingComponent: () => <Loader />,
     defaultNotFoundComponent: () => <div>Not Found</div>,
     Wrap: ({ children }) => (
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+      <TRPCProvider queryClient={queryClient} trpcClient={trpcClient}>
         {children}
       </TRPCProvider>
     ),

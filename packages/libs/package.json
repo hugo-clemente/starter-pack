@@ -1,0 +1,25 @@
+{
+  "name": "@starter-pack/libs",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#*": [
+      "./src/*",
+      "./src/*.ts",
+      "./src/*.tsx",
+      "./src/*/index.ts",
+      "./src/*/index.tsx"
+    ]
+  },
+  "exports": {
+    "./server/*": {
+      "default": "./src/server/*.ts"
+    },
+    "./client/*": {
+      "default": "./src/client/*.ts"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

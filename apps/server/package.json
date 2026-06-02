@@ -10,6 +10,7 @@
     "start": "node dist/index.mjs"
   },
   "dependencies": {
+    "@starter-pack/libs": "workspace:*",
     "@hono/node-server": "^1.14.4",
     "@hono/trpc-server": "^0.4.0",
     "@starter-pack/api": "workspace:*",
