@@ -6,30 +6,25 @@ import { useRouteContext } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import type { BetterAuthClientOptions } from "better-auth";
-import {
-  customSessionClient,
-  organizationClient,
-} from "better-auth/client/plugins";
+import { customSessionClient, organizationClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
 const authClientOptions = {
   baseURL: env.VITE_SERVER_URL,
-  plugins: [
-    organizationClient(),
-    polarClient(),
-    customSessionClient<typeof auth>(),
-  ],
+  plugins: [organizationClient(), polarClient(), customSessionClient<typeof auth>()],
 } satisfies BetterAuthClientOptions;
 
 export const buildAuthClient = createIsomorphicFn()
-  .server(() =>
-    createAuthClient({
+  .server(() => {
+    const cookie = getRequestHeaders().get("cookie");
+
+    return createAuthClient({
       ...authClientOptions,
       fetchOptions: {
-        headers: getRequestHeaders(),
+        headers: cookie ? { cookie } : {},
       },
-    })
-  )
+    });
+  })
   .client(() => createAuthClient(authClientOptions));
 
 export type AuthClient = ReturnType<typeof buildAuthClient>;

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "buildCommand": "pnpm turbo build --filter=server"
+  },
+  "deploy": {
+    "preDeployCommand": ["pnpm db:migrate-deploy"],
+    "startCommand": "pnpm -F server start"
+  }
+}

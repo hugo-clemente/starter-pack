@@ -18,11 +18,11 @@ const onQueryError = createIsomorphicFn().client(
         onClick: query.invalidate,
       },
     });
-  }
+  },
 );
 
-const getServerRequestHeaders = createIsomorphicFn()
-  .server(() => getRequestHeaders())
+const getServerCookie = createIsomorphicFn()
+  .server(() => getRequestHeaders().get("cookie") ?? undefined)
   .client(() => undefined);
 
 export const createQueryClient = () => {
@@ -36,12 +36,18 @@ export const createQueryClient = () => {
       httpBatchLink({
         url: `${env.VITE_SERVER_URL}/trpc`,
         fetch(url, options) {
-          const baseHeaders = getServerRequestHeaders() ?? options?.headers;
+          const headers = new Headers(options?.headers);
           const orgSlug = activeOrgSlug.get();
 
-          const headers = orgSlug
-            ? { ...baseHeaders, "x-organization-slug": orgSlug }
-            : baseHeaders;
+          if (orgSlug) {
+            headers.set("x-organization-slug", orgSlug);
+          }
+
+          const cookie = getServerCookie();
+
+          if (cookie) {
+            headers.set("cookie", cookie);
+          }
 
           return fetch(url, {
             ...options,
